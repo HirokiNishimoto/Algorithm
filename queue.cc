@@ -19,7 +19,7 @@ struct queue
 int enquence(struct queue *queue, int input)
 {
   if (queue->last <= QUEUE_SIZE)
-{
+  {
     queue->arr[queue->last] = input;
     queue->last++;
     return 0;
