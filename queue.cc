@@ -10,12 +10,14 @@ using namespace std;
 
 #define QUEUE_SIZE 32
 
-struct queue {
+struct queue
+{
   int arr[QUEUE_SIZE];
   int first, last;
 };
 
-int enquence(struct queue *queue, int input) {
+int enquence(struct queue *queue, int input)
+{
   if (queue->last <= QUEUE_SIZE)
 {
     queue->arr[queue->last] = input;
