@@ -31,7 +31,7 @@ int enquence(struct queue *queue, int input)
   }
 }
 
-int denquence(struct queue *queue)
+int dequence(struct queue *queue)
 {
   if (queue->first != queue->last)
   {
@@ -82,7 +82,7 @@ int main(void)
 
   for (int i=0; i<2;i++)
   {
-    denquence(&queue);
+    dequence(&queue);
     show_queue(&queue);
   }
 
