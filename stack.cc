@@ -10,14 +10,16 @@ using namespace std;
 
 #define STACK_SIZE 32
 
-struct stack {
+struct stack
+{
   int arr[STACK_SIZE];
   int top;
 };
 
-int push(struct stack *stack, int input) {
-  if (stack->top <= STACK_SIZE)
+int push(struct stack *stack, int input)
 {
+  if (stack->top <= STACK_SIZE)
+  {
     stack->top++;
     stack->arr[stack->top] = input;
     return 0;
