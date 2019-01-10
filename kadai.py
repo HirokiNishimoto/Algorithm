@@ -1,21 +1,45 @@
 import numpy as np
 
+
 def grounded(arg):
+
+    """
+    **概要**
+
+    grounded(arg)
+        for i in arg全体の集合
+            if (iが攻撃されているargの集合に含まれない)
+                iは誰にも攻撃されていない主張である旨を出力
+        if (誰にも攻撃されていない主張が見つからない)
+            その旨を出力
+    """
+
     no_attacked_arg_exists = False
-    attacked_arg = arg[:,1]
+    attacked_arg_array = arg[:,1]
     max_arg = np.amax(arg)
     list_of_no_attacked_arg = []
     for i in range(max_arg+1):
-        if not i in attacked_arg:
+        if not i in attacked_arg_array:
             print("{}は誰にも攻撃されていない主張です。".format(i))
             no_attacked_arg_exists = True
             list_of_no_attacked_arg.append(i)
     if not no_attacked_arg_exists:
         print("誰にも攻撃されていない主張はありません")
 
-    return list(set(list_of_no_attacked_arg))
+    return list(set(list_of_no_attacked_arg)) #次のattacked()でこのリストを再利用することを見越してのreturn
 
 def attacked(arg):
+
+    """
+    **概要**
+
+    attacked(arg)
+        誰にも攻撃されていないargの集合のそれぞれの要素(no_attacked_arg)に対し、
+            攻撃している主張の集合の中でno_attacked_argを探す(index=iだったとする)
+            ->no_attacked_argは攻撃されている主張の集合のi番目の要素を攻撃していることがわかる。
+
+    """
+
     list_of_no_attacked_arg=grounded(arg)
     attacking_arg_list = arg[:,0]
     attacked_arg_list = arg[:,1]
@@ -25,6 +49,16 @@ def attacked(arg):
                 print(no_attacked_arg,"は",attacked_arg_list[i],"を攻撃しています。")
 
 def interactive(arg):
+
+    """
+    **概要**
+
+    interactive(arg)
+        argの攻撃している主張とされている主張を入れ替えたものを作成(arg_replace)
+        
+
+    """
+
     interactive_args_exists =False
     arg_replace=np.zeros([len(arg),2])
     for i in range(len(arg)):
@@ -34,7 +68,8 @@ def interactive(arg):
             print(arg[i,0],"と",arg[i,1], "は互いに攻撃しあっています。")
             interactive_args_exists = True
     if interactive_args_exists == False:
-        print("互いに攻撃しあっている主張はありません")
+        print("互いに攻撃しあっている主張はありません。")
+
 def conflict_free(arg):
     arg_replace=np.zeros([len(arg),2])
     for i in range(len(arg)):
@@ -54,6 +89,11 @@ def conflict_free(arg):
         for k in range(len(all_conbination)):
             print("お互いに攻撃してもされてもいない主張は",all_conbination[k,0],"と",all_conbination[k,1],"です")
 
+
+
+"""
+以下では、色々な主張の集合に対して、上の関数を実行する。
+"""
 print("")
 print("例1")
 arg1 = np.array([[0,1],[1,2]])
