@@ -71,6 +71,9 @@ def interactive(arg):
         print("互いに攻撃しあっている主張はありません。")
 
 def conflict_free(arg):
+    """
+    **概要**
+    """
     arg_replace=np.zeros([len(arg),2])
     for i in range(len(arg)):
         arg_replace[i] = np.array([arg[i,1],arg[i,0]])
