@@ -1,5 +1,10 @@
-import numpy as np
+"""
+広域システム概論I 期末レポート
+J4-170175 西本洋紀 学際科学科B群2年
 
+"""
+
+import numpy as np
 
 def grounded(arg):
 
@@ -55,7 +60,8 @@ def interactive(arg):
 
     interactive(arg)
         argの攻撃している主張とされている主張を入れ替えたものを作成(arg_replace)
-        
+        arg_replace の中から攻撃している主張とされている主張の組を１つ選ぶ
+            この組がargの中にもあれば、お互いに攻撃しあっている主張
 
     """
 
@@ -65,34 +71,38 @@ def interactive(arg):
         arg_replace[i] = np.array([arg[i,1],arg[i,0]])
     for i in range(len(arg_replace)):
         if (arg[i]==arg_replace).all(axis=1).any():
-            print(arg[i,0],"と",arg[i,1], "は互いに攻撃しあっています。")
+            if arg[i,0]<arg[i,1]:
+                print(arg[i,0],"と",arg[i,1], "は互いに攻撃しあっています。")
             interactive_args_exists = True
     if interactive_args_exists == False:
         print("互いに攻撃しあっている主張はありません。")
 
 def conflict_free(arg):
     """
-    **概要**
+    **概要**_
+    1. interactive()関数の時と同様の手順でarg_replaceを作成。
+    2.主張の関係についての全てのありうる場合を求める。(ell_conbination)
+    3. argまたharg_replaceの中に現れる主張の組をall_conbinationから取り除く。
+    4. 3.を終えた後にall_conbinationに残っている主張の組は、お互い攻撃してもされてもいない。
+
     """
     arg_replace=np.zeros([len(arg),2])
     for i in range(len(arg)):
         arg_replace[i] = np.array([arg[i,1],arg[i,0]])
     all_conbination = np.empty((0,2),int)
-    for i in range(len(arg)):
-        for j in range(len(arg)-i -1):
+    for i in range(np.amax(arg)):
+        for j in range(np.amax(arg)-i -1):
             all_conbination=np.append(all_conbination,[[i,i+j+1]], axis=0)
     for i in range(len(arg)):
         if (arg[i]==all_conbination).all(axis=1).any() or (arg_replace[i]==all_conbination).all(axis=1).any():
             delete_me=np.array([[np.amax(arg[i]), np.amin(arg[i])]])
             if delete_me in all_conbination:
-                all_conbination=np.delete(all_conbination,delete_me,axis=0)
+                all_conbination=np.delete(all_conbination, delete_me,axis=0)
     if len(all_conbination)==0:
         print("お互い攻撃してもされてもいない主張はありません")
     else:
         for k in range(len(all_conbination)):
             print("お互いに攻撃してもされてもいない主張は",all_conbination[k,0],"と",all_conbination[k,1],"です")
-
-
 
 """
 以下では、色々な主張の集合に対して、上の関数を実行する。
@@ -132,6 +142,22 @@ conflict_free(arg2)
 print("")
 print("例3")
 arg3 = np.array([[0,1],[1,0],[1,2],[2,1]])
+print(arg3)
+print("grounded")
+grounded(arg3)
+print("")
+print("attacked")
+attacked(arg3)
+print("")
+print("interactive")
+interactive(arg3)
+print("")
+print("conflict_free")
+conflict_free(arg3)
+
+print("")
+print("例4")
+arg3 = np.array([[0,8],[1,0],[1,2],[2,1],[3,2],[1,4],[5,6],[7,3],[6,3],[0,3],[6,8],[6,4],[3,9],[2,3],[4,3],[3,4],[5,2],[0,6],[6,3],[2,0],[5,3],[7,4],[5,7],[7,1]])
 print(arg3)
 print("grounded")
 grounded(arg3)
