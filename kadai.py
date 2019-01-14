@@ -29,7 +29,7 @@ def grounded(arg):
             no_attacked_arg_exists = True
             list_of_no_attacked_arg.append(i)
     if not no_attacked_arg_exists:
-        print("誰にも攻撃されていない主張はありません")
+        print("誰にも攻撃されていない主張はありません。")
 
     return list(set(list_of_no_attacked_arg)) #次のattacked()でこのリストを再利用することを見越してのreturn
 
@@ -77,96 +77,69 @@ def interactive(arg):
     if interactive_args_exists == False:
         print("互いに攻撃しあっている主張はありません。")
 
+
 def conflict_free(arg):
     """
     **概要**_
     1. interactive()関数の時と同様の手順でarg_replaceを作成。
-    2.主張の関係についての全てのありうる場合を求める。(ell_conbination)
-    3. argまたharg_replaceの中に現れる主張の組をall_conbinationから取り除く。
+    2.主張の関係についての全てのありうる場合を求める。(all_conbination)
+    3. argまたarg_replaceの中に現れる主張の組(delete_me)をall_conbinationから取り除く。
     4. 3.を終えた後にall_conbinationに残っている主張の組は、お互い攻撃してもされてもいない。
 
     """
+
+    #arg_replaceの生成
     arg_replace=np.zeros([len(arg),2])
     for i in range(len(arg)):
         arg_replace[i] = np.array([arg[i,1],arg[i,0]])
+
+    #all_conbinationの生成
     all_conbination = np.empty((0,2),int)
-    for i in range(np.amax(arg)):
-        for j in range(np.amax(arg)-i -1):
+    for i in range(np.amax(arg)+1):
+        for j in range(np.amax(arg)-i ):
             all_conbination=np.append(all_conbination,[[i,i+j+1]], axis=0)
+    # print("all_conbination\n", all_conbination)
+
+    #rgまたarg_replaceの中に現れる主張の組(delete_me)をall_conbinationから取り除く。
     for i in range(len(arg)):
-        if (arg[i]==all_conbination).all(axis=1).any() or (arg_replace[i]==all_conbination).all(axis=1).any():
-            delete_me=np.array([[np.amax(arg[i]), np.amin(arg[i])]])
-            if delete_me in all_conbination:
-                all_conbination=np.delete(all_conbination, delete_me,axis=0)
+        if (arg[i]==all_conbination).all(axis=1).any() \
+        or (arg_replace[i]==all_conbination).all(axis=1).any():
+            delete_me=[np.amin(arg[i]), np.amax(arg[i])]
+            #print("delete_me", delete_me)
+            #all_conbinationからdelete_meを取り除く
+            for j in range(len(all_conbination)):
+                #print("all_conbination\n", all_conbination)
+                if (all_conbination[j]==delete_me).all():
+                    all_conbination=np.delete(all_conbination, j, 0)
+                    break
+
+    #結果の出力
     if len(all_conbination)==0:
-        print("お互い攻撃してもされてもいない主張はありません")
+        print("お互い攻撃してもされてもいない主張はありません。\n")
     else:
         for k in range(len(all_conbination)):
-            print("お互いに攻撃してもされてもいない主張は",all_conbination[k,0],"と",all_conbination[k,1],"です")
+            print("お互いに攻撃してもされてもいない主張は",all_conbination[k,0],"と",all_conbination[k,1],"です\n")
+
 
 """
 以下では、色々な主張の集合に対して、上の関数を実行する。
 """
-print("")
-print("例1")
-arg1 = np.array([[0,1],[1,2]])
-print(arg1)
-print("grounded")
-grounded(arg1)
-print("")
-print("attacked")
-attacked(arg1)
-print("")
-print("interactive")
-interactive(arg1)
-print("")
-print("conflict_free")
-conflict_free(arg1)
 
-print("")
-print("例2")
-arg2 = np.array([[0,1],[1,0]])
-print(arg2)
-print("grounded")
-grounded(arg2)
-print("")
-print("attacked")
-attacked(arg2)
-print("")
-print("interactive")
-interactive(arg2)
-print("")
-print("conflict_free")
-conflict_free(arg2)
+arg0 = np.array([[0,1],[1,2]])
+arg1 = np.array([[0,1],[1,0]])
+arg2 = np.array([[0,1],[1,0],[1,2],[2,1]])
+arg3 = np.array([[0,1],[0,2],[0,3],[0,4],[0,5],[1,2],[1,3],[1,4],[1,5],[2,3],[2,4],[2,5],[3,4],[3,5],[4,5],\
+                 [5,1],[5,2],[5,3],[5,4],[4,1],[4,2],[4,3],[3,1],[3,2],[2,1]])
+arg_list = [arg0,arg1,arg2,arg3]
+func = [grounded, attacked, interactive, conflict_free]
+#出力結果をわかりやすく出力する関数
+def show_result(arg,i):
+    print("\n例"+str(i*1))
+    print("arg:\n",arg)
+    for i in range(4):
+        print("\n"+func[i].__name__)
+        func[i](arg)
 
-print("")
-print("例3")
-arg3 = np.array([[0,1],[1,0],[1,2],[2,1]])
-print(arg3)
-print("grounded")
-grounded(arg3)
-print("")
-print("attacked")
-attacked(arg3)
-print("")
-print("interactive")
-interactive(arg3)
-print("")
-print("conflict_free")
-conflict_free(arg3)
-
-print("")
-print("例4")
-arg3 = np.array([[0,8],[1,0],[1,2],[2,1],[3,2],[1,4],[5,6],[7,3],[6,3],[0,3],[6,8],[6,4],[3,9],[2,3],[4,3],[3,4],[5,2],[0,6],[6,3],[2,0],[5,3],[7,4],[5,7],[7,1]])
-print(arg3)
-print("grounded")
-grounded(arg3)
-print("")
-print("attacked")
-attacked(arg3)
-print("")
-print("interactive")
-interactive(arg3)
-print("")
-print("conflict_free")
-conflict_free(arg3)
+#結果の出力
+for i in range(4):
+    show_result(arg_list[i],i)
