@@ -1,7 +1,13 @@
-"""
-広域システム概論I 期末レポート
+"""広域システム概論I 期末レポート
 J4-170175 西本洋紀 学際科学科B群2年
 
+第１回講義(データモデル)に関連。
+「議論をプログラムで扱って何か意味のある計算をしてみる」
+    -誰にも攻撃されていない主張を求める(grounded)
+    -誰にも攻撃されていない主張に攻撃されている主張を求める(attacked)
+    -お互い攻撃し合っている２つの主張を求める(interactive)
+    -その中のどの２つもお互いに攻撃していない主張を求める(conflict_free)
+    スライド末尾に載っている3つの表現に加えて、自作した少し複雑な表現に対しても上の関数を実行して結果を確認しました。
 """
 
 import numpy as np
@@ -20,9 +26,16 @@ def grounded(arg):
     """
 
     no_attacked_arg_exists = False
+
+    #攻撃されている主張の集合
     attacked_arg_array = arg[:,1]
+
     max_arg = np.amax(arg)
+
+    #誰にも攻撃されていない主張が見つかったらこの配列に格納する。
     list_of_no_attacked_arg = []
+
+    #誰にも攻撃されていない主張を探す
     for i in range(max_arg+1):
         if not i in attacked_arg_array:
             print("{}は誰にも攻撃されていない主張です。".format(i))
@@ -45,11 +58,18 @@ def attacked(arg):
 
     """
 
+    #list_of_no_attacked_arg: 誰にも攻撃されていないargの集合
     list_of_no_attacked_arg=grounded(arg)
+
+    #攻撃している主張とされている主張のリスト
     attacking_arg_list = arg[:,0]
     attacked_arg_list = arg[:,1]
+
+    #誰にも攻撃されていないargの集合のそれぞれの要素(no_attacked_arg)に対し
     for no_attacked_arg in list_of_no_attacked_arg:
+        #攻撃している主張の集合の中でno_attacked_argを探す(index=iだったとする)
         for i in range(len(attacking_arg_list)):
+            #見つかったらno_attacked_argは攻撃されている主張の集合のi番目の要素を攻撃していることがわかる。
             if attacking_arg_list[i] == no_attacked_arg:
                 print(no_attacked_arg,"は",attacked_arg_list[i],"を攻撃しています。")
 
@@ -66,10 +86,15 @@ def interactive(arg):
     """
 
     interactive_args_exists =False
+
+    #arg_replaceの作成
     arg_replace=np.zeros([len(arg),2])
     for i in range(len(arg)):
         arg_replace[i] = np.array([arg[i,1],arg[i,0]])
+
+    #arg_replace の中から攻撃している主張とされている主張の組を１つ選ぶ。
     for i in range(len(arg_replace)):
+        #iがargの中にあれば、お互いに攻撃しあっている主張
         if (arg[i]==arg_replace).all(axis=1).any():
             if arg[i,0]<arg[i,1]:
                 print(arg[i,0],"と",arg[i,1], "は互いに攻撃しあっています。")
@@ -132,6 +157,7 @@ arg3 = np.array([[0,1],[0,2],[0,3],[0,4],[0,5],[1,2],[1,3],[1,4],[1,5],[2,3],[2,
                  [5,1],[5,2],[5,3],[5,4],[4,1],[4,2],[4,3],[3,1],[3,2],[2,1]])
 arg_list = [arg0,arg1,arg2,arg3]
 func = [grounded, attacked, interactive, conflict_free]
+
 #出力結果をわかりやすく出力する関数
 def show_result(arg,i):
     print("\n例"+str(i*1))
