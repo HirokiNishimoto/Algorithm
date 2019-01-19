@@ -1,5 +1,4 @@
- #include <stdio.h>
-
+#include <stdio.h>
 
 void swap(int* A, int N, int i, int j)
 {
