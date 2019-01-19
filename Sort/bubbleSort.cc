@@ -44,7 +44,7 @@ int bubbleSort(int* A, int N)
 
 int main()
 {
-  int* A;
+  int A[100];
   int N, rep_counter;
   scanf("%d", &N);
 
