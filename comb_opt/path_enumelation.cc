@@ -1,3 +1,6 @@
+// p.4 Algorithm1.1
+// 順列ベクトルを辞書順に生成するアルゴリズム
+
 #include <bits/stdc++.h>
 using namespace std;
 
