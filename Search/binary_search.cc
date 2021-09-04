@@ -11,6 +11,8 @@ bool isOK(int index, int key) {
 }
 
 // 汎用的な二分探索のテンプレ
+// key以上の最小のindexを返す
+//
 int binary_search(int key) {
     int ng = -1; //「index = 0」が条件を満たすこともあるので、初期値は -1
     int ok = (int)a.size(); // 「index = a.size()-1」が条件を満たさないこともあるので、初期値は a.size()
